@@ -1,33 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import { Toast, Box, Center, Heading, VStack, HStack, FormControl, Input, Link, Button, Text, NativeBaseProvider } from 'native-base';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
 
 const Login = function ({ navigation }) {
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+
     const onClickSignIn = function () {
-        axios.post(axios.defaults.baseURL + "/api/signIn", {
-            username: "",
-            password: "",
+        axios.post(axios.defaults.baseURL + "/api/SignIn", {
+            username: username,
+            password: password,
         }).then(response => {
-            AsyncStorage.setItem('is_authenticate', true)
-            .then(() => {
-                navigation.replace("MainScreen");
-                Toast.show({ description: "Ok" });                    
-             })
-            .catch(err => {
-                 Toast.show({ description: err }) 
-            });
+            AsyncStorage.setItem('is_authenticate', true.toString());
+            navigation.navigate("MainScreen");
+            Toast.show({ description: "Ok",duration:1500});
         }).catch(err => {
-            Toast.show({ description: err });
+            Toast.show({ description: err.toString(),duration:3000});
         });
-        if (response.status != 0) {
-
-        } else {
-            navigation.replace('MainScreen');
-            toast.show({ description: "Ok!" });
-        }
-
     }
     const onGotoSignUp = function () {
 
@@ -53,11 +44,11 @@ const Login = function ({ navigation }) {
                     <VStack space={3} mt="5">
                         <FormControl>
                             <FormControl.Label>用户名</FormControl.Label>
-                            <Input />
+                            <Input onChangeText={t => setUsername(t)} />
                         </FormControl>
                         <FormControl>
                             <FormControl.Label>密码</FormControl.Label>
-                            <Input type="password" />
+                            <Input type="password" onChangeText={t => setPassword(t)} />
                             <Link _text={{
                                 fontSize: "xs",
                                 fontWeight: "500",
@@ -66,7 +57,7 @@ const Login = function ({ navigation }) {
                                 忘记密码?
                             </Link>
                         </FormControl>
-                        <Button mt="2" colorScheme="indigo" onPress={() => Toast.show({ description: "asd" })} >
+                        <Button mt="2" colorScheme="indigo" onPress={onClickSignIn} >
                             Sign in
                         </Button>
                         <HStack mt="6" justifyContent="center">
