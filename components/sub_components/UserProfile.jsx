@@ -1,7 +1,6 @@
 import React from 'react';
 import { Text } from 'native-base';
-import { withFooter } from './MainScreenFoot';
-const UserProfile = withFooter( function() {
+const UserProfile = function() {
     return (
         <>
         <Text>sad</Text>
@@ -14,6 +13,6 @@ const UserProfile = withFooter( function() {
 
         </>
     );
-});
+};
 
 export default UserProfile;

@@ -6,7 +6,7 @@ import axios from 'axios';
 import SportCard from './SportCard';
 import { withFooter } from './MainScreenFoot';
 
-const ExerciseList = withFooter(function () {
+const ExerciseList = function () {
     const [sportData, setSportData] = useState([]);
     const getSportInfo = function () {
         axios.get(axios.defaults.baseURL + "/api/SportInfo", {
@@ -45,6 +45,6 @@ const ExerciseList = withFooter(function () {
             )}
         />
     );
-});
+};
 
 export default ExerciseList;

@@ -7,24 +7,6 @@ import ShareSvg from '../../assets/svg/share.svg';
 import TeamSvg from '../../assets/svg/team.svg';
 import { useNavigation } from '@react-navigation/native';
 import { StyleSheet } from 'react-native';
-const styles = StyleSheet.create({
-  foot: {
-      position: "absolute",
-      width: "100%",
-      bottom: "0%"
-  }
-});
-
-const withFooter = function (Component) {
-  return function WrappedComponent(props) {
-    return (
-      <View >
-        <Component {...props} />
-        <MainScreenFoot style={styles.foot} />
-      </View>
-    );
-  };
-}
 
 const MainScreenFoot = function () {
   const [selected, setSelected] = useState(0);
@@ -70,4 +52,3 @@ const MainScreenFoot = function () {
 }
 
 export default MainScreenFoot;
-export {withFooter};

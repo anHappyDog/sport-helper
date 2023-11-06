@@ -1,7 +1,6 @@
 import React from 'react';
 import { Text } from 'native-base';
-import { withFooter } from './MainScreenFoot';
-const TeamHall = withFooter(function() {
+const TeamHall = function() {
     return (
         <>
         <Text>sad</Text>
@@ -12,6 +11,6 @@ const TeamHall = withFooter(function() {
 
         </>
     );
-});
+};
 
 export default TeamHall;
