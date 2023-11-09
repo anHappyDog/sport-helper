@@ -1,23 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Box, Text, Image, VStack, Button, HStack } from 'native-base';
 import { StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-const covers = {
-    badmiton: require('../../assets/jpg/badmiton.jpg'),
-    basketball: require('../../assets/jpg/basketball.jpg'),
-    billiards: require('../../assets/jpg/billiards.jpg'),
-    fitness: require('../../assets/jpg/fitness.jpg'),
-    frisbee: require('../../assets/jpg/frisbee.jpg'),
-    otherSports: require('../../assets/jpg/otherSports.jpg'),
-    pingpong: require('../../assets/jpg/pingpong.jpg'),
-    run: require('../../assets/jpg/run.jpg'),
-    soccer: require('../../assets/jpg/soccer.jpg'),
-    swim: require('../../assets/jpg/swim.jpg'),
-    td: require('../../assets/jpg/td.jpg'),
-    tennis: require('../../assets/jpg/tennis.jpg'),
-    volleyball: require('../../assets/jpg/volleyball.jpg'),
-    // 其他图片...
-};
+import {covers} from './StaticResources';
 
 
 
@@ -30,9 +15,9 @@ const SportCard = function (props) {
             <VStack marginTop={3}>
                 <HStack position={"relative"} marginBottom={2}>
                     <Text fontSize={24}>{props.sportName}</Text>
-                    <Button position={"absolute"} right={"10%"} onPress={()=> navigation.navigate('Sporting',{sportId:props.id})}>开始锻炼</Button>
+                    <Button position={"absolute"} right={"10%"} onPress={()=> navigation.navigate('Sporting',{sportId:props.id,coverName:props.coverName,sportName:props.sportName,description:props.sportDescription})}>开始锻炼</Button>
                 </HStack>
-                <Text fontSize={17} numberOfLines={2} ellipsizeMode='fade'>{props.sportDescription}</Text>
+                <Text fontSize={17} numberOfLines={2} ellipsizeMode='tail'>{props.sportDescription}</Text>
             </VStack>
         </Box>
     );

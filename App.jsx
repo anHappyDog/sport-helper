@@ -7,8 +7,7 @@ import axios from 'axios';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import SignUp from './components/Login/SignUp';
 import GetPassword from "./components/Login/GetPassword";
-
-axios.defaults.baseURL = 'http://10.0.2.2:8000';
+axios.defaults.baseURL = 'https://android.api.lonelywatch.com';
 
 const MainStack = createStackNavigator();
 const App = function ({ navigation }) {
@@ -26,7 +25,6 @@ const App = function ({ navigation }) {
         <MainStack.Screen name="Login" component={Login} options={{ headerShown: false }}></MainStack.Screen>
         <MainStack.Screen name="SignUp" component={SignUp} options={{ headerShown: false }} />
         <MainStack.Screen name="GetPassword" component={GetPassword} options={{ headerShown: false }} />
-        
         <MainStack.Screen name="MainScreen" component={MainScreen} options={{ headerShown: false }}></MainStack.Screen>
 
       </MainStack.Navigator>
