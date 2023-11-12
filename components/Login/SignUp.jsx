@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Toast, Box, Center, Heading, VStack, HStack, FormControl, Input, Link, Button, Text, NativeBaseProvider } from 'native-base';
 import { useState } from 'react';
 function isValidPhoneNumber(phoneNumber) {
-    const regex = /^(\+\d{1,3}[- ]?)?\d{10}$/;
+    const regex = /^(\+\d{1,3}[- ]?)?\d{11}$/;
     return regex.test(phoneNumber);
   }
   
@@ -38,14 +38,15 @@ const SignUp = function({navigation}) {
         }
         else {
             axios.post(axios.defaults.baseURL + "/api/SignUp",{
-                username,
-                password,
-                email,
-                phone
+                username:username,
+                password:password,
+                email:email,
+                phone:phone
             }).then(response=>{
                 if (response.data['status'] == 0) {
-                    Toast.show({description:"注册成功",duration:2000});  
+                    console.log(username,password,email,phone);
                     navigation.navigate('Login');
+                    Toast.show({description:"注册成功",duration:2000}); 
                 } else if (response.data['status'] == -1) {
                     //
                     Toast.show({description:"该用户名已被注册",duration:1200});

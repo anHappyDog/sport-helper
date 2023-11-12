@@ -12,6 +12,7 @@ const covers = {
     td: require('../../assets/jpg/td.jpg'),
     tennis: require('../../assets/jpg/tennis.jpg'),
     volleyball: require('../../assets/jpg/volleyball.jpg'),
+    defaultAvatar : require('../../assets/jpg/avatar.jpg'),
     // 其他图片...
 };
 

@@ -4,7 +4,7 @@ import Geolocation from '@react-native-community/geolocation';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import { covers } from './StaticResources';
-import { Image, View, VStack, Text, NativeBaseProvider, HStack, Heading ,Button} from 'native-base';
+import { Image, View, VStack, Text, NativeBaseProvider, HStack, Heading, Button } from 'native-base';
 const Sporting = (props) => {
     const [location, setLocation] = useState(null);
     const [position, setPosition] = useState('');
@@ -58,7 +58,7 @@ const Sporting = (props) => {
 
                     <Image source={covers[props.route.params.coverName]} width={"100%"} height={"200"} alt={"Sport Cover"} borderRadius={10}></Image>
                     <HStack>
-                        <Heading>{props.route.params.sportName}</Heading><Button onPress={()=>{ navigation.navigate('OnSport',{sportId:props.route.params.sportId,sportName:props.route.params.sportName,position:position})}}>开始!</Button>
+                        <Heading>{props.route.params.sportName}</Heading><Button onPress={() => { navigation.navigate('OnSport', { sportId: props.route.params.sportId, sportName: props.route.params.sportName, position: position }) }}>开始!</Button>
                     </HStack>
                     <Text>{props.route.params.description}</Text>
                 </VStack>

@@ -1,61 +1,119 @@
-import { HStack, Text, Button, NativeBaseProvider, View, Box } from "native-base";
-import React, { useState } from "react";
-import { TextInput, Platform, KeyboardAvoidingView, SafeAreaView, ScrollView, StyleSheet, Pressable } from "react-native";
+import { HStack, Text, Button, NativeBaseProvider,AlertDialog,Spacer, View, Box, Image, Toast } from "native-base";
+import React, { useState,useEffect } from "react";
+import { TextInput, BackHandler,Platform, KeyboardAvoidingView, SafeAreaView, ScrollView, StyleSheet, Pressable, Alert } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { actions, RichEditor, RichToolbar } from "react-native-pell-rich-editor";
-import { launchImageLibrary } from 'react-native-image-picker';
+import ImagePicker from 'react-native-image-crop-picker';
 import RNFS from 'react-native-fs';
-
+import { useNavigation } from "@react-navigation/native";
+import axios from "axios";
+import { Modal,VStack } from "native-base";
 const handleHead = ({ tintColor }) => <Text style={{ color: tintColor }}>H1</Text>
 const handleHead2 = ({ tintColor }) => <Text style={{ color: tintColor }}>H2</Text>
 const handleHead3 = ({ tintColor }) => <Text style={{ color: tintColor }}>H3</Text>
 const ArticleWrite = () => {
   const richText = React.createRef(null);
   const photoList = useState([]);
-  const  selectImage = async function() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [title,setTitle] = useState('');
+  const [content,setContent] = useState('');
+  const [cover,setCover] = useState('');
+  const [coverFilePath,setCoverFilePath] = useState('');
+  const [isShowModal,setShowModal] = useState(false);
+  const navigation = useNavigation();
+  const [uploadedAvatar,setUploadedAvatar] = useState(null);
+
+  const getBase64Image = async function (filePath) {
+    const imageBase64 = await RNFS.readFile(filePath, 'base64');
+    return `data:image/png;base64,${imageBase64}`;
+  }
+  const openImagePicker = async () => {
+    try {
+        const image = await ImagePicker.openPicker({
+            cropping: false
+        });
+
+        const filePath = image.path;
+        setCoverFilePath(filePath);
+        console.log(filePath);
+        const fileData = await RNFS.readFile(filePath, 'base64');
+        setCover(fileData);
+
+    } catch (err) {
+        console.log(err.toString());
+        Toast.show({ description: err.toString(), duration: 2500 });
+    }
+}
+  useEffect(()=>{
+    const backAction = () => {
+      setIsOpen(true);
+      return true;
+    };
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction
+    );
+    return () => backHandler.remove();
+  },[]);
+  const onClose = () => {
+    setIsOpen(false);
+  };
+  const onClickRelase = async function () {
+    try{
+      const response = await axios.post(axios.defaults.baseURL + "/api/DeliverArticle",{
+        title:title,
+        content:content,
+        cover:cover
+      });
+      if (response.data['status'] === 0) {
+          Toast.show({description:"发表成功",duration:2500});
+          navigation.goBack();
+      } else {
+        Toast.show({description:response.data['msg'],duration:2500});
+      }
+    } catch(err) {
+      Toast.show({description:err.toString(),duration:2500});
+    }
+  }
+
+  const onClickCancel = function () {
+    setIsOpen(true);
+  }
+  const selectImage = async function () {
     const options = {
       mediaType: 'photo',
       maxWidth: 50,
       maxHeight: 100,
     };
-
-    launchImageLibrary(options,async (response) => {
-      if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      } else {
-        const fileName = response.assets[0].fileName || `image_${Date.now()}.jpg`;
-        
-        const destinationPath = `${RNFS.DocumentDirectoryPath}/${fileName}`;
-        try {
-          console.log(destinationPath);
-          await RNFS.copyFile(response.assets[0].originalPath,destinationPath);
-          console.log('File exists:', await RNFS.exists(destinationPath));
-          console.log('Original File:',response.assets[0].fileName);
-          // 将图片添加到富文本编辑器中
-          //richText.current.insertImage(response.assets[0].uri);
-          
-          //photoList.insert(destinationPath);
-          richText.current.insertImage(`file://${destinationPath}`);
-          richText.current.insertImage(response.assets[0].uri);
-        } catch(err) {
-          console.log(err);
-        }
-      }
+    ImagePicker.openPicker({
+      width: 300,
+      height: 400,
+      cropping: true
+    }).then(image => {
+      getBase64Image(image.path).then(response => {
+        richText.current.insertImage(response);
+      }).catch(err => {
+        console.log(err.toString());
+      })
     });
   }
-
+  const onClickUploadCover = async function() {
+    setShowModal(true);
+  }
   return (
     <NativeBaseProvider>
       <SafeAreaView height={"90%"}>
-        <ScrollView usecontainer = {true}>
+        <ScrollView usecontainer={true} oncursorPosition={() => { scrollTo({ y: scrollY - 30, animated: true }); }}>
           <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} height={"100%"} borderWidth={2}>
             <View position={"relative"}>
-              <TouchableOpacity styles={styles.extBtn}>
+              <TouchableOpacity styles={styles.extBtn} onPress={onClickCancel}>
                 <Text fontSize={24}>退出</Text>
               </TouchableOpacity>
-              <TouchableOpacity position={"absolute"}>
+              <TouchableOpacity styles={styles.extBtn} onPress={onClickUploadCover}>
+                <Text fontSize={24}>上传封面</Text>
+              </TouchableOpacity>
+              
+              <TouchableOpacity position={"absolute"} onPress={onClickRelase}>
                 <Text fontSize={24} color={"rgb(0,0,255)"}>发布</Text>
               </TouchableOpacity>
             </View>
@@ -66,6 +124,7 @@ const ArticleWrite = () => {
               initialHeight={200}
               onChange={descriptionText => {
                 console.log(descriptionText);
+                setContent(descriptionText);
               }}
               placeholder="文章内容"
             />
@@ -80,6 +139,47 @@ const ArticleWrite = () => {
           }}
           onPressAddImage={selectImage}
         />
+        <AlertDialog
+          isOpen={isOpen}
+          onClose={onClose}
+          motionPreset="slideInBottom"
+        >
+          <AlertDialog.Content>
+            <AlertDialog.Header>
+              <Text color={'rgb(255,0,0)'}  fontSize={24}>退出</Text>
+            </AlertDialog.Header>
+            <AlertDialog.Body>
+              <Text>确定要退出吗?所有内容不会被保存</Text>
+            </AlertDialog.Body>
+            <AlertDialog.Footer>
+              <HStack space={3}>
+                <Button title="取消" onPress={onClose} >取消</Button>
+                <Spacer />
+                <Button title="确认" onPress={()=>navigation.navigate('ArticleShare')} >确认</Button>
+              </HStack>
+            </AlertDialog.Footer>
+          </AlertDialog.Content>
+        </AlertDialog>
+        <Modal isOpen={isShowModal} onClose={() => { setShowModal(false); }}>
+                    <Modal.Content maxWidth="400px">
+                        <Modal.CloseButton />
+                        <Modal.Header>选择封面上传</Modal.Header>
+                        <Modal.Body>
+                            <VStack>
+                                <Text fontSize={20}>当前选择图片:</Text>
+                                <Text fontSize={16}>最大8M~~:</Text>
+                                {
+                                    uploadedAvatar === null ? <></> : (<Image alignSelf={"center"} marginTop={4} marginBottom={4}  alt="封面" bg="amber.300" width={32} height={32} source={{ uri: cover }}
+                                        ></Image>)
+                                }
+                                <Button marginBottom={4} onPress={openImagePicker}>选择图片</Button>
+                                <Button onPress={() => {
+                                    setShowModal(false);
+                                }}>返回</Button>
+                            </VStack>
+                        </Modal.Body>
+                    </Modal.Content>
+                </Modal>
       </SafeAreaView>
     </NativeBaseProvider>
 

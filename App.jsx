@@ -7,6 +7,7 @@ import axios from 'axios';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import SignUp from './components/Login/SignUp';
 import GetPassword from "./components/Login/GetPassword";
+import { NativeBaseProvider, ToastProvider } from "native-base";
 axios.defaults.baseURL = 'https://android.api.lonelywatch.com';
 
 const MainStack = createStackNavigator();
@@ -20,15 +21,21 @@ const App = function ({ navigation }) {
 
   }, []);
   return (
-    <NavigationContainer>
-      <MainStack.Navigator>
-        <MainStack.Screen name="Login" component={Login} options={{ headerShown: false }}></MainStack.Screen>
-        <MainStack.Screen name="SignUp" component={SignUp} options={{ headerShown: false }} />
-        <MainStack.Screen name="GetPassword" component={GetPassword} options={{ headerShown: false }} />
-        <MainStack.Screen name="MainScreen" component={MainScreen} options={{ headerShown: false }}></MainStack.Screen>
+    <NativeBaseProvider>
+      <ToastProvider>
+        <NavigationContainer>
+          <MainStack.Navigator>
+            <MainStack.Screen name="Login" component={Login} options={{ headerShown: false }}></MainStack.Screen>
+            <MainStack.Screen name="SignUp" component={SignUp} options={{ headerShown: false }} />
+            <MainStack.Screen name="GetPassword" component={GetPassword} options={{ headerShown: false }} />
+            <MainStack.Screen name="MainScreen" component={MainScreen} options={{ headerShown: false }}></MainStack.Screen>
 
-      </MainStack.Navigator>
-    </NavigationContainer>
+          </MainStack.Navigator>
+        </NavigationContainer>
+      </ToastProvider>
+    </NativeBaseProvider>
+
+
   );
 }
 export default App;

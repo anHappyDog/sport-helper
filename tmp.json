@@ -1,13 +1,14 @@
 {
-    "assets": [
-        {
-            "originalPath": "/sdcard/.transforms/synthetic/picker/0/com.android.providers.media.photopicker/media/1000003921.jpg",
-            "type": "image/jpeg",
-            "height": 300,
-            "width": 168,
-            "fileName": "1000003921.jpg",
-            "fileSize": 45220,
-            "uri": "file:///data/user/0/com.androidwork/cache/rn_image_picker_lib_temp_9c711d8b-ee48-4360-8a1f-eb852ea44725.jpg"
-        }
-    ]
+    "cropRect": {
+        "height": 1303,
+        "width": 978,
+        "x": 1,
+        "y": 453
+    },
+    "height": 400,
+    "mime": "image/jpeg",
+    "modificationDate": "1699511453000",
+    "path": "file:///storage/emulated/0/Android/data/com.androidwork/files/Pictures/91e667d6-cfca-450a-b21c-550e9c0b2ed7.jpg",
+    "size": 62168,
+    "width": 300
 }
