@@ -36,6 +36,7 @@
     "react-native-image-crop-picker": "^0.40.1",
     "react-native-pell-rich-editor": "^1.9.0",
     "react-native-popup-menu": "^0.16.1",
+    "react-native-render-html": "^6.3.4",
     "react-native-richtext-editor": "^0.1.14",
     "react-native-safe-area-context": "^3.4.1",
     "react-native-screens": "^3.27.0",

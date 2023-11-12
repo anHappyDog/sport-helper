@@ -13,6 +13,7 @@ const covers = {
     tennis: require('../../assets/jpg/tennis.jpg'),
     volleyball: require('../../assets/jpg/volleyball.jpg'),
     defaultAvatar : require('../../assets/jpg/avatar.jpg'),
+    defaultCover : require('../../assets/jpg/td.jpg'),
     // 其他图片...
 };
 

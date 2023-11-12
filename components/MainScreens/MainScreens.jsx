@@ -16,6 +16,7 @@ import SportPlan from '../sub_components/SportPlan';
 import CityWalkPage from '../sub_components/CityWalkPage';
 import CaloryPredict from '../sub_components/CaloryPredict'
 import SportResult from '../sub_components/SportResult';
+import ArticleShow from '../sub_components/ArticleShow';
 const MainScreenStack = createNativeStackNavigator();
 
 const MainScreen = function () {
@@ -37,7 +38,8 @@ const MainScreen = function () {
                         <MainScreenStack.Screen name="SportPlan" component={SportPlan} options={{ headerShown: false }} />
                         <MainScreenStack.Screen name="CityWalkPage" component={CityWalkPage} options={{ headerShown: false }} />
                         <MainScreenStack.Screen name="SportResult" component={SportResult} options={{ headerShown: false }} />
-                                                                                                                                                                                                                                             
+                        <MainScreenStack.Screen name="ArticleShow" component={ArticleShow} options={{ headerShown: false }} />
+                                                                                                                                                                                                                                                                                
                     </MainScreenStack.Navigator>
     );
 }

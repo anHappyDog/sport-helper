@@ -13,7 +13,7 @@ const handleHead2 = ({ tintColor }) => <Text style={{ color: tintColor }}>H2</Te
 const handleHead3 = ({ tintColor }) => <Text style={{ color: tintColor }}>H3</Text>
 const ArticleWrite = () => {
   const richText = React.createRef(null);
-  const photoList = useState([]);
+  const [photoList,setPhotoList] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [title,setTitle] = useState('');
   const [content,setContent] = useState('');
@@ -21,11 +21,10 @@ const ArticleWrite = () => {
   const [coverFilePath,setCoverFilePath] = useState('');
   const [isShowModal,setShowModal] = useState(false);
   const navigation = useNavigation();
-  const [uploadedAvatar,setUploadedAvatar] = useState(null);
 
   const getBase64Image = async function (filePath) {
     const imageBase64 = await RNFS.readFile(filePath, 'base64');
-    return `data:image/png;base64,${imageBase64}`;
+    return `data:image/jpeg;base64,${imageBase64}`;
   }
   const openImagePicker = async () => {
     try {
@@ -37,7 +36,7 @@ const ArticleWrite = () => {
         setCoverFilePath(filePath);
         console.log(filePath);
         const fileData = await RNFS.readFile(filePath, 'base64');
-        setCover(fileData);
+        setCover(`data:image/jpeg;base64,${fileData}`);
 
     } catch (err) {
         console.log(err.toString());
@@ -63,15 +62,19 @@ const ArticleWrite = () => {
       const response = await axios.post(axios.defaults.baseURL + "/api/DeliverArticle",{
         title:title,
         content:content,
-        cover:cover
+        cover:cover,
+        photoList:photoList,
+        baseUrl:axios.defaults.baseURL
       });
       if (response.data['status'] === 0) {
           Toast.show({description:"发表成功",duration:2500});
           navigation.goBack();
       } else {
         Toast.show({description:response.data['msg'],duration:2500});
+        console.log(response.data['msg']);
       }
     } catch(err) {
+
       Toast.show({description:err.toString(),duration:2500});
     }
   }
@@ -92,6 +95,7 @@ const ArticleWrite = () => {
     }).then(image => {
       getBase64Image(image.path).then(response => {
         richText.current.insertImage(response);
+        photoList.push(response);
       }).catch(err => {
         console.log(err.toString());
       })
@@ -117,7 +121,7 @@ const ArticleWrite = () => {
                 <Text fontSize={24} color={"rgb(0,0,255)"}>发布</Text>
               </TouchableOpacity>
             </View>
-            <TextInput style={styles.titleInput} placeholder="文章标题" />
+            <TextInput style={styles.titleInput} placeholder="文章标题" onChangeText={t=>setTitle(t)} />
             <RichEditor
               ref={richText}
               minimumFontSize={20}
@@ -169,7 +173,7 @@ const ArticleWrite = () => {
                                 <Text fontSize={20}>当前选择图片:</Text>
                                 <Text fontSize={16}>最大8M~~:</Text>
                                 {
-                                    uploadedAvatar === null ? <></> : (<Image alignSelf={"center"} marginTop={4} marginBottom={4}  alt="封面" bg="amber.300" width={32} height={32} source={{ uri: cover }}
+                                    cover === '' ? <></> : (<Image alignSelf={"center"} marginTop={4} marginBottom={4}  alt="封面" bg="amber.300" width={32} height={32} source={{ uri: coverFilePath }}
                                         ></Image>)
                                 }
                                 <Button marginBottom={4} onPress={openImagePicker}>选择图片</Button>

@@ -9,27 +9,7 @@ import axios from 'axios';
 import FabWithSvg from './FabWithSvg';
 
 const ArticleShare = function () {
-    const [articles, setArticles] = useState('');
     const navigation = useNavigation();
-    const getArticles = function () {
-        axios.get(axios.defaults.baseURL + "/api/GetArticles").then(response => {
-            if (response.data['status'] == 0) {
-
-            } else if (response.data['status'] == -1) {
-                Toast.show({ description: "验证失败,无法拉取文章", duration: 1500 });
-            }
-        }).catch(err => {
-            Toast.show({ description: "错误:" + err.toString(), duration: 1500 });
-        })
-    }
-
-    useFocusEffect(React.useCallback(
-        () => {
-
-        }, []
-    ));
-
-
     return (
         <NativeBaseProvider>
             <Box position={"absolute"} right={"5%"} bottom={"1%"} zIndex={1}>
